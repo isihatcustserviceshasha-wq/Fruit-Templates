@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dental Clinic WhatsApp Template Manager</title>
+  <!-- Load Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* =========================================================================
+       THEME VARIABLES & SMOOTH TRANSITIONS
+       ========================================================================= */
+    :root {
+      --bg-grad: linear-gradient(145deg, #fffdf0 0%, #fff6c2 50%, #ffea8a 100%);
+      --header-grad: linear-gradient(115deg, #d97706 0%, #f59e0b 32%, #fde047 65%, #f59e0b 100%);
+      --header-text: #422006;
+      --header-subtext: #713f12;
+      --text-primary: #422006;
+      --text-secondary: #713f12;
+      --text-muted: #92400e;
+      --card-bg: rgba(255, 253, 242, 0.86);
+      --card-border: rgba(234, 179, 8, 0.42);
+      --card-shadow: 0 10px 28px -8px rgba(180, 83, 9, 0.16), 0 4px 10px -4px rgba(234, 179, 8, 0.14);
+      --card-hover-shadow: 0 18px 34px -8px rgba(180, 83, 9, 0.24), 0 6px 14px -4px rgba(250, 204, 21, 0.28);
+      --pill-bg: rgba(255, 251, 230, 0.88);
+      --pill-border: rgba(217, 119, 6, 0.28);
+      --pill-active-bg: linear-gradient(135deg, #f59e0b 0%, #facc15 100%);
+      --pill-active-text: #422006;
+      --btn-primary-bg: linear-gradient(135deg, #f59e0b 0%, #facc15 55%, #eab308 100%);
+      --btn-primary-text: #422006;
+      --btn-primary-shadow: 0 6px 16px -4px rgba(217, 119, 6, 0.45);
+      --tag-bg: rgba(254, 240, 138, 0.78);
+      --tag-text: #78350f;
+      --tag-border: rgba(234, 179, 8, 0.45);
+      --input-bg: rgba(255, 255, 255, 0.88);
+      --input-border: rgba(217, 119, 6, 0.32);
+      --input-focus: #d97706;
+      --highlight-bg: #fef08a;
+      --highlight-text: #713f12;
+      --message-box-bg: rgba(255, 250, 224, 0.72);
+      --message-box-border: rgba(234, 179, 8, 0.28);
+      --toast-bg: #422006;
+      --toast-text: #fef9c3;
+    }
+
+    body[data-theme="apple"] {
+      --bg-grad: linear-gradient(145deg, #fff5f9 0%, #ffe0ee 50%, #ffc7e0 100%);
+      --header-grad: linear-gradient(115deg, #be185d 0%, #ec4899 38%, #f472b6 70%, #db2777 100%);
+      --header-text: #ffffff;
+      --header-subtext: #fce7f3;
+      --text-primary: #500724;
+      --text-secondary: #831843;
+      --text-muted: #9d174d;
+      --card-bg: rgba(255, 247, 251, 0.86);
+      --card-border: rgba(236, 72, 153, 0.36);
+      --card-shadow: 0 10px 28px -8px rgba(190, 24, 93, 0.16), 0 4px 10px -4px rgba(244, 114, 182, 0.16);
+      --card-hover-shadow: 0 18px 34px -8px rgba(190, 24, 93, 0.24), 0 6px 14px -4px rgba(236, 72, 153, 0.28);
+      --pill-bg: rgba(255, 241, 247, 0.88);
+      --pill-border: rgba(219, 39, 119, 0.26);
+      --pill-active-bg: linear-gradient(135deg, #db2777 0%, #f472b6 100%);
+      --pill-active-text: #ffffff;
+      --btn-primary-bg: linear-gradient(135deg, #db2777 0%, #ec4899 55%, #f43f5e 100%);
+      --btn-primary-text: #ffffff;
+      --btn-primary-shadow: 0 6px 16px -4px rgba(219, 39, 119, 0.45);
+      --tag-bg: rgba(251, 207, 232, 0.78);
+      --tag-text: #831843;
+      --tag-border: rgba(236, 72, 153, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --input-border: rgba(219, 39, 119, 0.3);
+      --input-focus: #db2777;
+      --highlight-bg: #fbcfe8;
+      --highlight-text: #831843;
+      --message-box-bg: rgba(255, 237, 246, 0.72);
+      --message-box-border: rgba(236, 72, 153, 0.25);
+      --toast-bg: #500724;
+      --toast-text: #fce7f3;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-grad);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.55s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    /* Fullscreen Particle Canvas (Non-blocking) */
+    #effects-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity 0.4s ease;
+    }
+
+    /* App content layer sits above ambient glitter/sparkles, burst particles render on top canvas */
+    #burst-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 60;
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Shimmering Metallic / Glossy Banner */
+    .shimmer-banner {
+      background: var(--header-grad);
+      background-size: 220% 220%;
+      animation: gradientSheen 7s ease infinite;
+      color: var(--header-text);
+      transition: background 0.5s ease, color 0.35s ease;
+    }
+
+    @keyframes gradientSheen {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Glassmorphic Frosted Cards */
+    .theme-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    .theme-panel {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    /* Shimmering Primary Button */
+    .btn-theme-primary {
+      position: relative;
+      overflow: hidden;
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      box-shadow: var(--btn-primary-shadow);
+      transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .btn-theme-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+      transform: skewX(-22deg);
+      transition: left 0.55s ease;
+    }
+
+    .btn-theme-primary:hover::after {
+      left: 140%;
+    }
+
+    .btn-theme-primary:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .btn-theme-primary:active {
+      transform: scale(0.97);
+    }
+
+    /* Theme Inputs */
+    .theme-input {
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      color: var(--text-primary);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .theme-input:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.22);
+    }
+
+    body[data-theme="apple"] .theme-input:focus {
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.22);
+    }
+
+    /* Category Pills */
+    .cat-pill {
+      background: var(--pill-bg);
+      border: 1.5px solid var(--pill-border);
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .cat-pill.active {
+      background: var(--pill-active-bg);
+      color: var(--pill-active-text);
+      border-color: transparent;
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.14);
+    }
+
+    /* Tag Badge */
+    .theme-tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid var(--tag-border);
+    }
+
+    /* Message Preview Box */
+    .message-preview {
+      background: var(--message-box-bg);
+      border: 1px solid var(--message-box-border);
+      color: var(--text-primary);
+    }
+
+    .placeholder-highlight {
+      background: var(--highlight-bg);
+      color: var(--highlight-text);
+      padding: 0 4px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+
+    /* Toast */
+    .theme-toast {
+      background: var(--toast-bg);
+      color: var(--toast-text);
+    }
+
+    /* Hide scrollbar cleanly for horizontal category pills on mobile */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body data-theme="banana" class="antialiased selection:bg-yellow-300 selection:text-amber-950">
+  <!-- Ambient Background Canvas (Golden Glitter for Banana / 4-Point Pink Sparkles for Apple) -->
+  <canvas id="effects-canvas" aria-hidden="true"></canvas>
+  <!-- Copy Click Burst Canvas -->
+  <canvas id="burst-canvas" aria-hidden="true"></canvas>
+
+  <!-- Main Application Shell -->
+  <div class="app-shell max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-20">
+    <!-- =======================================================================
+         TOP HEADER BANNER
+         ======================================================================= -->
+    <header class="shimmer-banner rounded-3xl p-4 sm:p-6 shadow-xl border border-white/40 mb-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <!-- Brand Title & Active Clinic Subtitle -->
+        <div class="flex items-start sm:items-center gap-3.5">
+          <div id="header-icon-box" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/80 backdrop-blur-md flex items-center justify-center text-2xl sm:text-3xl shadow-md shrink-0">
+            🍌
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight leading-tight">
+              Dental Clinic WhatsApp Template Manager
+            </h1>
+            <p id="header-clinic-subtitle" class="text-xs sm:text-sm font-semibold mt-0.5 opacity-90">
+              Banana Bank - T.Low Dental Clinic &amp; I-sihat Dental Care
+            </p>
+          </div>
+        </div>
+
+        <!-- Utility Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Effects ON/OFF Toggle -->
+          <button
+            type="button"
+            id="btn-toggle-effects"
+            onclick="toggleEffects()"
+            class="px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/85 hover:bg-white text-slate-900 shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            title="Toggle glitter and sparkle animations"
+          >
+            <span id="effects-label">✨ Effects: ON</span>
+          </button>
+
+          <!-- Add New Template -->
+          <button
+            type="button"
+            onclick="openTemplateModal()"
+            class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>+ New Script</span>
+          </button>
+
+          <!-- Export JSON -->
+          <button
+            type="button"
+            onclick="exportTemplatesJSON()"
+            class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white/75 hover:bg-white text-slate-900 shadow-sm transition active:scale-95 cursor-pointer"
+            title="Download all templates as JSON"
+          >
+            Export JSON
+          </button>
+
+          <!-- Import JSON -->
+          <label
+            for="import-json-input"
+            class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white/75 hover:bg-white text-slate-900 shadow-sm transition active:scale-95 cursor-pointer"
+            title="Import templates from JSON file"
+          >
+            Import JSON
+            <input id="import-json-input" type="file" accept=".json,application/json" class="hidden" onchange="importTemplatesJSON(event)" />
+          </label>
+
+          <!-- Reset Defaults -->
+          <button
+            type="button"
+            onclick="openResetConfirm()"
+            class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white/60 hover:bg-white text-slate-900 shadow-sm transition active:scale-95 cursor-pointer"
+            title="Restore all 37 default clinic scripts"
+          >
+            Reset Defaults
+          </button>
+        </div>
+      </div>
+
+      <!-- Bank Switcher Tabs -->
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button
+          type="button"
+          id="tab-banana"
+          onclick="switchBank('banana')"
+          class="flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2"
+        >
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="text-2xl shrink-0">🍌</span>
+            <div class="min-w-0">
+              <div class="text-sm sm:text-base font-extrabold truncate">Banana Bank</div>
+              <div class="text-[11px] sm:text-xs font-medium opacity-85 truncate">T.Low Dental &amp; I-sihat</div>
+            </div>
+          </div>
+          <span id="badge-banana" class="px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0">26</span>
+        </button>
+
+        <button
+          type="button"
+          id="tab-apple"
+          onclick="switchBank('apple')"
+          class="flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2"
+        >
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="text-2xl shrink-0">🍎</span>
+            <div class="min-w-0">
+              <div class="text-sm sm:text-base font-extrabold truncate">Apple Bank</div>
+              <div class="text-[11px] sm:text-xs font-medium opacity-85 truncate">Klinik Pergigian TruBright</div>
+            </div>
+          </div>
+          <span id="badge-apple" class="px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0">11</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =======================================================================
+         STICKY LIVE PLACEHOLDER AUTO-FILL BAR
+         ======================================================================= -->
+    <section class="theme-panel sticky top-2 z-30 rounded-2xl p-3.5 sm:p-4 mb-5">
+      <div class="flex items-center justify-between gap-2 mb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-extrabold">Live Auto-Fill Bar</span>
+          <span class="hidden sm:inline text-xs font-medium opacity-75">Type once to personalize every WhatsApp script below</span>
+        </div>
+        <button
+          type="button"
+          onclick="clearPlaceholders()"
+          class="text-xs font-bold px-3 py-1.5 rounded-lg bg-white/80 hover:bg-white border border-black/10 transition active:scale-95 cursor-pointer"
+        >
+          Clear
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div>
+          <label for="ph-name" class="block text-[11px] font-bold uppercase tracking-wide opacity-80 mb-1">[Name]</label>
+          <input
+            id="ph-name"
+            type="text"
+            placeholder="e.g. Aina"
+            oninput="updatePlaceholders()"
+            class="theme-input w-full px-3 py-2 rounded-xl text-sm font-medium"
+          />
+        </div>
+        <div>
+          <label for="ph-branch" class="block text-[11px] font-bold uppercase tracking-wide opacity-80 mb-1">[Branch]</label>
+          <input
+            id="ph-branch"
+            type="text"
+            list="branch-suggestions"
+            placeholder="e.g. SS2 PJ"
+            oninput="updatePlaceholders()"
+            class="theme-input w-full px-3 py-2 rounded-xl text-sm font-medium"
+          />
+          <datalist id="branch-suggestions"></datalist>
+        </div>
+        <div>
+          <label for="ph-date" class="block text-[11px] font-bold uppercase tracking-wide opacity-80 mb-1">[Date]</label>
+          <input
+            id="ph-date"
+            type="text"
+            placeholder="e.g. Sat, 28 Nov"
+            oninput="updatePlaceholders()"
+            class="theme-input w-full px-3 py-2 rounded-xl text-sm font-medium"
+          />
+        </div>
+        <div>
+          <label for="ph-time" class="block text-[11px] font-bold uppercase tracking-wide opacity-80 mb-1">[Time]</label>
+          <input
+            id="ph-time"
+            type="text"
+            placeholder="e.g. 2:30 PM"
+            oninput="updatePlaceholders()"
+            class="theme-input w-full px-3 py-2 rounded-xl text-sm font-medium"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SEARCH & CATEGORY FILTER BAR
+         ======================================================================= -->
+    <section class="theme-panel rounded-2xl p-3.5 sm:p-4 mb-5">
+      <div class="flex flex-col md:flex-row md:items-center gap-3">
+        <!-- Search Input -->
+        <div class="relative flex-1">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-base opacity-70 pointer-events-none">🔍</span>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search scripts by keyword (e.g. RM99, BM, transfer, scaling, deposit)..."
+            oninput="handleSearch(this.value)"
+            class="theme-input w-full pl-10 pr-9 py-2.5 rounded-xl text-sm font-medium"
+          />
+          <button
+            type="button"
+            id="btn-clear-search"
+            onclick="clearSearch()"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold px-2 py-1 rounded-md opacity-70 hover:opacity-100 cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Visible Count Pill -->
+        <div id="results-counter" class="text-xs sm:text-sm font-bold px-3.5 py-2 rounded-xl bg-white/70 border border-black/10 shrink-0 text-center">
+          Showing 26 scripts
+        </div>
+      </div>
+
+      <!-- Category Pills -->
+      <div id="category-pills" class="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         TEMPLATE CARDS GRID
+         ======================================================================= -->
+    <main id="templates-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+      <!-- Cards rendered dynamically by JS -->
+    </main>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden theme-panel rounded-3xl p-10 text-center mt-4">
+      <div class="text-4xl mb-3">🔍</div>
+      <h3 class="text-lg font-extrabold mb-1">No matching templates found</h3>
+      <p class="text-sm opacity-80 mb-4">Try clearing your search filter or create a brand-new script for this bank.</p>
+      <button
+        type="button"
+        onclick="resetFilters()"
+        class="btn-theme-primary px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer"
+      >
+        Show All Scripts
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       ADD / EDIT TEMPLATE MODAL
+       ========================================================================= -->
+  <div id="template-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45 backdrop-blur-sm">
+    <div class="theme-panel w-full max-w-xl rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="modal-title" class="text-lg sm:text-xl font-extrabold">Add New Script</h2>
+        <button
+          type="button"
+          onclick="closeTemplateModal()"
+          class="w-9 h-9 rounded-xl bg-white/75 hover:bg-white font-bold flex items-center justify-center cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form id="template-form" onsubmit="saveTemplateForm(event)" class="space-y-4">
+        <input type="hidden" id="form-id" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="form-bank" class="block text-xs font-bold uppercase tracking-wide mb-1 opacity-85">Bank</label>
+            <select id="form-bank" class="theme-input w-full px-3 py-2.5 rounded-xl text-sm font-semibold">
+              <option value="banana">🍌 Banana Bank (T.Low &amp; I-sihat)</option>
+              <option value="apple">🍎 Apple Bank (TruBright)</option>
+            </select>
+          </div>
+          <div>
+            <label for="form-category" class="block text-xs font-bold uppercase tracking-wide mb-1 opacity-85">Category</label>
+            <select id="form-category" class="theme-input w-full px-3 py-2.5 rounded-xl text-sm font-semibold">
+              <option value="First-Time Inquiries">First-Time Inquiries</option>
+              <option value="Promos & Pricing">Promos &amp; Pricing</option>
+              <option value="Objections & Cases">Objections &amp; Cases</option>
+              <option value="Follow-Ups">Follow-Ups</option>
+              <option value="Branches & Booking">Branches &amp; Booking</option>
+              <option value="Customer Service">Customer Service</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="form-title" class="block text-xs font-bold uppercase tracking-wide mb-1 opacity-85">Template Title</label>
+          <input
+            id="form-title"
+            type="text"
+            required
+            placeholder="e.g. Weekend Braces Promo Reply"
+            class="theme-input w-full px-3.5 py-2.5 rounded-xl text-sm font-medium"
+          />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="form-content" class="block text-xs font-bold uppercase tracking-wide opacity-85">WhatsApp Message</label>
+            <span class="text-[11px] font-semibold opacity-75">Use [Name], [Branch], [Date], [Time]</span>
+          </div>
+          <textarea
+            id="form-content"
+            rows="6"
+            required
+            placeholder="Type your WhatsApp script here..."
+            class="theme-input w-full px-3.5 py-2.5 rounded-xl text-sm font-medium leading-relaxed"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+          <button
+            type="button"
+            onclick="closeTemplateModal()"
+            class="px-4 py-2.5 rounded-xl text-sm font-bold bg-white/80 hover:bg-white border border-black/10 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-theme-primary px-5 py-2.5 rounded-xl text-sm font-extrabold cursor-pointer"
+          >
+            Save Script
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CONFIRMATION MODAL (No browser alert/confirm)
+       ========================================================================= -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45 backdrop-blur-sm">
+    <div class="theme-panel w-full max-w-md rounded-3xl p-6 shadow-2xl">
+      <h3 id="confirm-title" class="text-lg font-extrabold mb-2">Confirm Action</h3>
+      <p id="confirm-message" class="text-sm opacity-85 mb-5 leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-2.5">
+        <button
+          type="button"
+          onclick="closeConfirmModal()"
+          class="px-4 py-2.5 rounded-xl text-sm font-bold bg-white/80 hover:bg-white border border-black/10 cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="confirm-action-btn"
+          onclick="executeConfirmAction()"
+          class="px-5 py-2.5 rounded-xl text-sm font-extrabold bg-rose-600 hover:bg-rose-700 text-white shadow-md cursor-pointer"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       TOAST NOTIFICATION
+       ========================================================================= -->
+  <div
+    id="toast"
+    class="theme-toast fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 translate-y-4"
+  >
+    <span id="toast-icon">✨</span>
+    <span id="toast-text">Copied to clipboard!</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. STORAGE KEY, CATEGORIES & BANK CONFIG
+    // =========================================================================
+    const STORAGE_KEY = 'dental_wa_templates_v5';
+
+    const CATEGORIES = [
+      'All',
+      'Promos & Pricing',
+      'First-Time Inquiries',
+      'Objections & Cases',
+      'Follow-Ups',
+      'Branches & Booking',
+      'Customer Service'
+    ];
+
+    const BANK_META = {
+      banana: {
+        name: 'Banana Bank',
+        subtitle: 'Banana Bank - T.Low Dental Clinic & I-sihat Dental Care',
+        icon: '🍌',
+        branches: [
+          'T.Low Dental Clinic (SS2 Petaling Jaya)',
+          'I-sihat Dental Care (Sentul)',
+          'T.Low Dental Clinic (KL Sentral)',
+          'T.Low Dental Clinic (Bukit Jalil)'
+        ]
+      },
+      apple: {
+        name: 'Apple Bank',
+        subtitle: 'Apple Bank - Klinik Pergigian TruBright',
+        icon: '🍎',
+        branches: [
+          'Klinik Pergigian TruBright (SS2 PJ)',
+          'Klinik Pergigian TruBright (Sentul)',
+          'Klinik Pergigian TruBright (KL Sentral)'
+        ]
+      }
+    };
+
+    // =========================================================================
+    // 2. ALL 37 PRE-LOADED TEMPLATES (STRICTLY ZERO EM DASHES ANYWHERE)
+    // =========================================================================
+    const DEFAULT_TEMPLATES = [
+      // ==================== BANANA BANK (26 TEMPLATES) ====================
+      // First-Time Inquiries (11)
+      {
+        id: 'b-1',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Year-End Braces Intro (Behaviourist Hook - Gaps/Crowding)',
+        content: `Hi! Sasha here from T.Low Dental Clinic. Thanks for asking about braces!
+
+Good news, our Year-End Promo is on right now from just RM99/month, and you can come in for a free consultation first to see how your teeth can look before deciding anything.
+
+Are you looking to fix gaps, crowding, or just exploring for now?`
+      },
+      {
+        id: 'b-2',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Year-End Braces Intro (Short & Direct - Branch Prompt)',
+        content: `Hi! Sasha here from T.Low Dental Clinic. Glad you reached out about braces!
+
+You caught our Year-End Promo from only RM99/month. Consultation is 100% free so our dentist can check your teeth first, zero pressure to proceed.
+
+Which branch is easiest for you to drop by: SS2 PJ, Sentul, or KL Sentral?`
+      },
+      {
+        id: 'b-3',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Year-End Braces Intro (KISS - Ultra Short)',
+        content: `Hi! Sasha here from T.Low Dental Clinic. Thanks for asking about braces!
+
+Good news, our Year-End Braces Promo is on right now from just RM99/month, plus a free consultation so you can decide comfortably before committing.
+
+Want to check available slots?`
+      },
+      {
+        id: 'b-4',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Braces Experience Check (English Behaviourist)',
+        content: `Just so I can guide you better, is this your first time checking on braces, or have you done a consultation before?`
+      },
+      {
+        id: 'b-5',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Braces Experience Check (BM Warm & Polite)',
+        content: `Supaya senang saya nak bantu awak, ini kali pertama awak tanya pasal braces, atau pernah buat consultation kat mana-mana sebelum ni?`
+      },
+      {
+        id: 'b-6',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Braces Experience Check (BM Casual & Friendly)',
+        content: `Boleh saya tahu, ini first time awak survey pasal braces ke, atau pernah buat check-up kat klinik lain sebelum ni?`
+      },
+      {
+        id: 'b-7',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Timeline Check (Behaviourist - Zero Pressure)',
+        content: `No pressure at all, are you just surveying options for now, or thinking of getting started soon?`
+      },
+      {
+        id: 'b-8',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Timeline Check (Warm & Consultative)',
+        content: `Just so I know how best to assist you, are you still surveying for now or planning to start soon?`
+      },
+      {
+        id: 'b-9',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Timeline Check (KISS - Short & Casual)',
+        content: `Quick question so I can share the right details, are you just surveying for now or hoping to start soon?`
+      },
+      {
+        id: 'b-10',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'Timeline Check (BM - Santai / Zero Pressure)',
+        content: `Takpe santai je, sekarang awak baru nak survey dulu ke, atau memang plan nak mula dalam masa terdekat?`
+      },
+      {
+        id: 'b-11',
+        bank: 'banana',
+        category: 'First-Time Inquiries',
+        title: 'General Clinic Welcome (Free Consultation)',
+        content: `Hi [Name]! Sasha here from T.Low Dental Clinic. Thanks for reaching out! We offer a free consultation so our dentist can check your teeth and walk you through the best options with zero pressure. What treatment are you interested in today?`
+      },
+
+      // Promos & Pricing (5)
+      {
+        id: 'b-12',
+        bank: 'banana',
+        category: 'Promos & Pricing',
+        title: 'Year-End Conventional Braces Promo (Full Breakdown)',
+        content: `Hi [Name]! Here is our Year-End Conventional Braces Promo at T.Low Dental Clinic:
+
+- Package price: RM3,899
+- Installation: RM300 per arch
+- Monthly installment: from RM99 to RM150/month
+- Consultation: FREE
+
+Would you like to book your free consultation at [Branch] to see if this suits your teeth?`
+      },
+      {
+        id: 'b-13',
+        bank: 'banana',
+        category: 'Promos & Pricing',
+        title: 'Self-Ligating Braces Promo',
+        content: `Hi [Name]! If you prefer faster adjustments and smoother comfort without elastic ties, we also have our Self-Ligating Braces package at RM5,899 with flexible monthly installments.
+
+Consultation is completely free, so our dentist can show you both options in person and help you compare!`
+      },
+      {
+        id: 'b-14',
+        bank: 'banana',
+        category: 'Promos & Pricing',
+        title: 'Clear Aligners / Invisalign Info',
+        content: `Hi [Name]! Looking for something discreet? We offer Clear Aligners that are removable and nearly invisible. Since every smile needs a custom plan, you can drop by for a free consultation first so our dentist can check your teeth and give you an exact quote.`
+      },
+      {
+        id: 'b-15',
+        bank: 'banana',
+        category: 'Promos & Pricing',
+        title: 'EMS Airflow Scaling & Polishing Promo',
+        content: `Hi [Name]! We are running our EMS Airflow Scaling promo at RM199. It uses gentle warm water and fine powder, so it is much more comfortable for sensitive teeth and great at lifting stubborn coffee or tea stains. Would you like to check slots at [Branch]?`
+      },
+      {
+        id: 'b-16',
+        bank: 'banana',
+        category: 'Promos & Pricing',
+        title: 'Veneers Pricing Guide',
+        content: `Hi [Name]! Here is a quick guide for our veneers:
+
+- Composite Veneers: RM250 to RM350 per tooth
+- Porcelain Veneers: RM900 to RM1,200 per tooth
+
+You can come in for a free consultation first so our dentist can check your enamel and recommend the best fit for your smile.`
+      },
+
+      // Objections & Cases (5)
+      {
+        id: 'b-17',
+        bank: 'banana',
+        category: 'Objections & Cases',
+        title: 'Just Surveying / Price Check Reply',
+        content: `Totally fine, [Name]! Take all the time you need to survey. Whenever you are ready, our consultation is completely free so you can get a proper check-up and exact quote with zero obligation. Just text me anytime if you have questions!`
+      },
+      {
+        id: 'b-18',
+        bank: 'banana',
+        category: 'Objections & Cases',
+        title: 'Mid-Treatment Braces Transfer Patient',
+        content: `Hi [Name], we totally understand wanting to continue your braces smoothly. For safety reasons, our dentist will need to do a quick visual assessment first to check your current brackets, wire tension, and tooth movement before advising on the transfer plan. Consultation is free, would you like to slot in a visit?`
+      },
+      {
+        id: 'b-19',
+        bank: 'banana',
+        category: 'Objections & Cases',
+        title: 'Past Accident / Jaw Alignment / Overbite Case',
+        content: `Thanks for sharing that with me, [Name]. Cases involving jaw alignment, overbite, or past injuries definitely need careful planning. Our dentist will check your bite thoroughly during the free consultation and let you know honestly what braces can achieve for you.`
+      },
+      {
+        id: 'b-20',
+        bank: 'banana',
+        category: 'Objections & Cases',
+        title: 'Missing Teeth & Braces Inquiry',
+        content: `Good question, [Name]! Having missing teeth does not automatically stop you from getting braces. In many cases, braces can either close the gap or create the right space for a future replacement. Our dentist can check this for you during your free consultation.`
+      },
+      {
+        id: 'b-21',
+        bank: 'banana',
+        category: 'Objections & Cases',
+        title: 'Previous Whitening Disappointment',
+        content: `I completely get why you would feel hesitant after a past experience, [Name]. Different stains respond differently, so our dentist always checks your enamel first during a free consultation to tell you honestly what kind of brightness you can expect before you spend anything.`
+      },
+
+      // Follow-Ups (2)
+      {
+        id: 'b-22',
+        bank: 'banana',
+        category: 'Follow-Ups',
+        title: 'Gentle Follow-Up (EN)',
+        content: `Hi [Name]! Just checking in gently from T.Low Dental Clinic. Our Year-End Braces Promo is still on, and free consultation slots are open this week if you would like to drop by and take a look. No rush at all!`
+      },
+      {
+        id: 'b-23',
+        bank: 'banana',
+        category: 'Follow-Ups',
+        title: 'Gentle Follow-Up (BM)',
+        content: `Hi [Name]! Sasha dari T.Low Dental Clinic ni. Saja nak follow up santai, promo braces hujung tahun masih berjalan dan slot free consultation pun ada minggu ni. Kalau nak tanya apa-apa dulu pun boleh je!`
+      },
+
+      // Branches & Booking (2)
+      {
+        id: 'b-24',
+        bank: 'banana',
+        category: 'Branches & Booking',
+        title: 'Branch Locations (SS2 PJ, Sentul, KL Sentral, Bukit Jalil)',
+        content: `Here are our clinic branches for your convenience:
+
+- T.Low Dental Clinic (SS2 Petaling Jaya)
+- I-sihat Dental Care (Sentul)
+- T.Low Dental Clinic (KL Sentral)
+- T.Low Dental Clinic (Bukit Jalil)
+
+Which branch is easiest for you to visit?`
+      },
+      {
+        id: 'b-25',
+        bank: 'banana',
+        category: 'Branches & Booking',
+        title: 'Appointment Confirmation',
+        content: `Hi [Name]! Your free consultation is confirmed:
+
+- Clinic: [Branch]
+- Date: [Date]
+- Time: [Time]
+
+Please let me know if you need the Waze/Google Maps link or need to reschedule. See you soon!`
+      },
+
+      // Customer Service (1)
+      {
+        id: 'b-26',
+        bank: 'banana',
+        category: 'Customer Service',
+        title: 'Billing Apology & Refund Resolution (Manager Anoratha)',
+        content: `Hi [Name], I am reaching out on behalf of our manager, Anoratha, at T.Low Dental Clinic. We sincerely apologize for the billing mix-up regarding your recent payment. We have reviewed your receipt and are processing your refund right away. Thank you so much for your patience and understanding.`
+      },
+
+      // ==================== APPLE BANK (11 TEMPLATES) ====================
+      // Promos & Pricing (3)
+      {
+        id: 'a-1',
+        bank: 'apple',
+        category: 'Promos & Pricing',
+        title: 'November Braces Promo (Full Breakdown)',
+        content: `Hi [Name]! Thanks for reaching out to Klinik Pergigian TruBright!
+
+Good news, our November Braces Promo is on right now:
+- Package price: RM3,899
+- Deposit: RM100
+- Installation: RM350 per arch
+- Monthly installment: RM150/month
+
+Would you like to check available slots to come in and let our dentist assess your teeth?`
+      },
+      {
+        id: 'a-2',
+        bank: 'apple',
+        category: 'Promos & Pricing',
+        title: 'Clear Aligners Inquiry',
+        content: `Hi [Name]! Thanks for asking about Clear Aligners at Klinik Pergigian TruBright. They are a super neat, removable option if you prefer no metal brackets. Let me know if you would like to drop by for an assessment so our dentist can plan your smile!`
+      },
+      {
+        id: 'a-3',
+        bank: 'apple',
+        category: 'Promos & Pricing',
+        title: 'Self-Ligating Upgrade Info',
+        content: `Hi [Name]! At Klinik Pergigian TruBright, we also offer Self-Ligating Braces if you are looking for easier cleaning and fewer tightening visits. Our dentist can walk you through the difference during your visit so you can pick what feels best.`
+      },
+
+      // First-Time Inquiries (2)
+      {
+        id: 'a-4',
+        bank: 'apple',
+        category: 'First-Time Inquiries',
+        title: 'First-Time Braces Welcome (No Fee Mentioned Upfront)',
+        content: `Hi [Name]! Sasha here from Klinik Pergigian TruBright. Thanks for your interest in braces!
+
+Our November Promo is available right now at RM3,899 with RM100 deposit and RM150 monthly installments. Is this your first time looking into braces, or have you done a check-up before?`
+      },
+      {
+        id: 'a-5',
+        bank: 'apple',
+        category: 'First-Time Inquiries',
+        title: 'Assessment Fee Policy (Only When Asked)',
+        content: `Great question, [Name]! At Klinik Pergigian TruBright, there is a RM30 assessment fee for the consultation, and it is completely waived once you proceed with your treatment.`
+      },
+
+      // Objections & Cases (3)
+      {
+        id: 'a-6',
+        bank: 'apple',
+        category: 'Objections & Cases',
+        title: 'General Price Survey Reply',
+        content: `No worries at all, [Name]! Totally understand wanting to compare options first. Feel free to save our promo details, and just drop me a message whenever you are ready to book your visit at TruBright.`
+      },
+      {
+        id: 'a-7',
+        bank: 'apple',
+        category: 'Objections & Cases',
+        title: 'Mid-Treatment Transfer Safety Explanation',
+        content: `Hi [Name], for transfer braces cases, our dentist at TruBright will need to examine your current brackets and alignment first to make sure everything is safe to continue smoothly. Would you like to book a quick assessment slot?`
+      },
+      {
+        id: 'a-8',
+        bank: 'apple',
+        category: 'Objections & Cases',
+        title: 'Nervous First-Timer Reassurance',
+        content: `Totally normal to feel a bit nervous for your first time, [Name]! Our dentist at TruBright is super gentle and will explain every step clearly before doing anything, so you are always in control.`
+      },
+
+      // Follow-Ups (2)
+      {
+        id: 'a-9',
+        bank: 'apple',
+        category: 'Follow-Ups',
+        title: 'Friendly Follow-Up (Previous Lead)',
+        content: `Hi [Name]! Sasha here from Klinik Pergigian TruBright. Just checking in to see if you still had any questions about our RM3,899 braces promo. Happy to help whenever you are ready!`
+      },
+      {
+        id: 'a-10',
+        bank: 'apple',
+        category: 'Follow-Ups',
+        title: 'Last-Call November Promo Reminder',
+        content: `Hi [Name]! Quick friendly heads-up from Klinik Pergigian TruBright that our November Braces Promo (RM100 deposit, RM150/month) is wrapping up soon. Let me know if you would like to lock in a slot!`
+      },
+
+      // Branches & Booking (1)
+      {
+        id: 'a-11',
+        bank: 'apple',
+        category: 'Branches & Booking',
+        title: 'TruBright Booking Confirmation',
+        content: `Hi [Name]! Your appointment at Klinik Pergigian TruBright ([Branch]) is confirmed:
+
+- Date: [Date]
+- Time: [Time]
+
+Let me know if you need directions or any changes. See you soon!`
+      }
+    ];
+
+    // =========================================================================
+    // 3. APPLICATION STATE
+    // =========================================================================
+    const state = {
+      activeBank: 'banana',
+      activeCategory: 'All',
+      searchQuery: '',
+      effectsEnabled: true,
+      placeholders: {
+        name: '',
+        branch: '',
+        date: '',
+        time: ''
+      },
+      templates: []
+    };
+
+    let pendingConfirmCallback = null;
+    let toastTimeout = null;
+
+    // =========================================================================
+    // 4. STORAGE HELPERS
+    // =========================================================================
+    function loadTemplates() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            state.templates = parsed;
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Could not read from localStorage, using defaults.', err);
+      }
+      state.templates = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
+      saveTemplates();
+    }
+
+    function saveTemplates() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.templates));
+      } catch (err) {
+        console.warn('Could not save to localStorage.', err);
+      }
+    }
+
+    // =========================================================================
+    // 5. THEME & BANK SWITCHING
+    // =========================================================================
+    function switchBank(bank) {
+      state.activeBank = bank;
+      state.activeCategory = 'All';
+
+      // Smoothly transition CSS theme variables via body attribute
+      document.body.setAttribute('data-theme', bank);
+
+      // Update header icon & subtitle
+      const meta = BANK_META[bank];
+      document.getElementById('header-icon-box').textContent = meta.icon;
+      document.getElementById('header-clinic-subtitle').textContent = meta.subtitle;
+
+      // Update branch autocomplete suggestions
+      const datalist = document.getElementById('branch-suggestions');
+      datalist.innerHTML = meta.branches.map(b => `<option value="${escapeHtml(b)}"></option>`).join('');
+
+      updateBankTabsUI();
+      updateBankCounts();
+      renderCategoryPills();
+      renderTemplates();
+
+      // Re-seed ambient particles for the new theme (Glitter vs Sparkles)
+      initAmbientParticles();
+    }
+
+    function updateBankTabsUI() {
+      const tabBanana = document.getElementById('tab-banana');
+      const tabApple = document.getElementById('tab-apple');
+      const badgeBanana = document.getElementById('badge-banana');
+      const badgeApple = document.getElementById('badge-apple');
+
+      if (state.activeBank === 'banana') {
+        tabBanana.className = 'flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2 bg-white text-amber-950 border-yellow-300 shadow-lg scale-[1.01]';
+        badgeBanana.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0 bg-yellow-300 text-amber-950';
+
+        tabApple.className = 'flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2 bg-white/35 hover:bg-white/55 text-amber-950 border-white/40';
+        badgeApple.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0 bg-amber-950/15 text-amber-950';
+      } else {
+        tabApple.className = 'flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2 bg-white text-pink-950 border-pink-300 shadow-lg scale-[1.01]';
+        badgeApple.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0 bg-pink-500 text-white';
+
+        tabBanana.className = 'flex items-center justify-between gap-3 p-3.5 rounded-2xl text-left font-bold transition-all duration-300 cursor-pointer border-2 bg-white/25 hover:bg-white/40 text-white border-white/35';
+        badgeBanana.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold shrink-0 bg-white/25 text-white';
+      }
+    }
+
+    function updateBankCounts() {
+      const bananaCount = state.templates.filter(t => t.bank === 'banana').length;
+      const appleCount = state.templates.filter(t => t.bank === 'apple').length;
+      document.getElementById('badge-banana').textContent = bananaCount;
+      document.getElementById('badge-apple').textContent = appleCount;
+    }
+
+    // =========================================================================
+    // 6. PLACEHOLDERS, SEARCH & CATEGORY FILTERS
+    // =========================================================================
+    function updatePlaceholders() {
+      state.placeholders.name = document.getElementById('ph-name').value.trim();
+      state.placeholders.branch = document.getElementById('ph-branch').value.trim();
+      state.placeholders.date = document.getElementById('ph-date').value.trim();
+      state.placeholders.time = document.getElementById('ph-time').value.trim();
+      renderTemplates();
+    }
+
+    function clearPlaceholders() {
+      document.getElementById('ph-name').value = '';
+      document.getElementById('ph-branch').value = '';
+      document.getElementById('ph-date').value = '';
+      document.getElementById('ph-time').value = '';
+      updatePlaceholders();
+      showToast('Auto-fill fields cleared', '🧹');
+    }
+
+    function applyPlaceholdersPlain(text) {
+      let out = text;
+      if (state.placeholders.name) out = out.replace(/\[Name\]/gi, state.placeholders.name);
+      if (state.placeholders.branch) out = out.replace(/\[Branch\]/gi, state.placeholders.branch);
+      if (state.placeholders.date) out = out.replace(/\[Date\]/gi, state.placeholders.date);
+      if (state.placeholders.time) out = out.replace(/\[Time\]/gi, state.placeholders.time);
+      return out;
+    }
+
+    function applyPlaceholdersHTML(text) {
+      let safe = escapeHtml(text);
+      const map = [
+        { token: /\[Name\]/gi, val: state.placeholders.name },
+        { token: /\[Branch\]/gi, val: state.placeholders.branch },
+        { token: /\[Date\]/gi, val: state.placeholders.date },
+        { token: /\[Time\]/gi, val: state.placeholders.time }
+      ];
+      map.forEach(({ token, val }) => {
+        if (val) {
+          safe = safe.replace(token, `<span class="placeholder-highlight">${escapeHtml(val)}</span>`);
+        } else {
+          safe = safe.replace(token, match => `<span class="underline decoration-dotted font-semibold opacity-80">${match}</span>`);
+        }
+      });
+      return safe;
+    }
+
+    function handleSearch(val) {
+      state.searchQuery = val.trim().toLowerCase();
+      document.getElementById('btn-clear-search').classList.toggle('hidden', !state.searchQuery);
+      renderTemplates();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      handleSearch('');
+    }
+
+    function selectCategory(cat) {
+      state.activeCategory = cat;
+      renderCategoryPills();
+      renderTemplates();
+    }
+
+    function resetFilters() {
+      state.activeCategory = 'All';
+      clearSearch();
+      renderCategoryPills();
+      renderTemplates();
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById('category-pills');
+      const bankTemplates = state.templates.filter(t => t.bank === state.activeBank);
+
+      container.innerHTML = CATEGORIES.map(cat => {
+        const count = cat === 'All'
+          ? bankTemplates.length
+          : bankTemplates.filter(t => t.category === cat).length;
+        const isActive = state.activeCategory === cat;
+        return `
+          <button
+            type="button"
+            onclick="selectCategory('${escapeJs(cat)}')"
+            class="cat-pill ${isActive ? 'active' : ''} px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-1.5 cursor-pointer shrink-0"
+          >
+            <span>${escapeHtml(cat)}</span>
+            <span class="text-[11px] opacity-80">(${count})</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 7. RENDER TEMPLATE CARDS
+    // =========================================================================
+    function renderTemplates() {
+      const grid = document.getElementById('templates-grid');
+      const emptyState = document.getElementById('empty-state');
+      const counter = document.getElementById('results-counter');
+
+      const filtered = state.templates.filter(t => {
+        if (t.bank !== state.activeBank) return false;
+        if (state.activeCategory !== 'All' && t.category !== state.activeCategory) return false;
+        if (state.searchQuery) {
+          const hay = `${t.title} ${t.category} ${t.content}`.toLowerCase();
+          return hay.includes(state.searchQuery);
+        }
+        return true;
+      });
+
+      counter.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? 'script' : 'scripts'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      const copyIcon = state.activeBank === 'banana' ? '✨' : '💖';
+
+      grid.innerHTML = filtered.map(tpl => {
+        const previewHtml = applyPlaceholdersHTML(tpl.content);
+        return `
+          <article class="theme-card rounded-3xl p-4 sm:p-5 flex flex-col justify-between gap-4">
+            <div>
+              <!-- Card Header -->
+              <div class="flex items-start justify-between gap-2 mb-3">
+                <span class="theme-tag text-[11px] font-bold px-2.5 py-1 rounded-full">
+                  ${escapeHtml(tpl.category)}
+                </span>
+                <div class="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onclick="openTemplateModal('${escapeJs(tpl.id)}')"
+                    class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white/75 hover:bg-white border border-black/10 transition cursor-pointer"
+                    title="Edit script"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onclick="openDeleteConfirm('${escapeJs(tpl.id)}')"
+                    class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white/75 hover:bg-rose-50 hover:text-rose-700 border border-black/10 transition cursor-pointer"
+                    title="Delete script"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <h3 class="text-base font-extrabold leading-snug mb-3">
+                ${escapeHtml(tpl.title)}
+              </h3>
+
+              <!-- Formatted Message Preview -->
+              <div class="message-preview rounded-2xl p-3.5 text-sm leading-relaxed whitespace-pre-wrap break-words font-medium">
+                ${previewHtml}
+              </div>
+            </div>
+
+            <!-- Copy Action Button -->
+            <button
+              type="button"
+              onclick="copyTemplate('${escapeJs(tpl.id)}', event)"
+              class="btn-theme-primary w-full py-3 px-4 rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>${copyIcon}</span>
+              <span>Copy for WhatsApp</span>
+            </button>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 8. COPY TO CLIPBOARD (IFRAME-SAFE) + GLITTER/SPARKLE BURST
+    // =========================================================================
+    function copyTemplate(id, evt) {
+      const tpl = state.templates.find(t => t.id === id);
+      if (!tpl) return;
+
+      const finalText = applyPlaceholdersPlain(tpl.content);
+
+      // Reliable iframe-safe clipboard copy using hidden textarea + execCommand
+      let copied = false;
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = finalText;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, finalText.length);
+        copied = document.execCommand('copy');
+        document.body.removeChild(textarea);
+      } catch (err) {
+        console.warn('execCommand copy error:', err);
+      }
+
+      if (copied) {
+        const icon = state.activeBank === 'banana' ? '🍌✨' : '🍎💖';
+        showToast('Copied for WhatsApp!', icon);
+        if (state.effectsEnabled && evt) {
+          const rect = evt.currentTarget.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          triggerCopyBurst(cx, cy);
+        }
+      } else {
+        showToast('Could not copy automatically. Please copy manually.', '⚠️');
+      }
+    }
+
+    // =========================================================================
+    // 9. CRUD MODALS (ADD, EDIT, DELETE, RESET)
+    // =========================================================================
+    function openTemplateModal(editId = null) {
+      const modal = document.getElementById('template-modal');
+      const titleEl = document.getElementById('modal-title');
+      const idInput = document.getElementById('form-id');
+      const bankInput = document.getElementById('form-bank');
+      const catInput = document.getElementById('form-category');
+      const nameInput = document.getElementById('form-title');
+      const contentInput = document.getElementById('form-content');
+
+      if (editId) {
+        const tpl = state.templates.find(t => t.id === editId);
+        if (!tpl) return;
+        titleEl.textContent = 'Edit Script';
+        idInput.value = tpl.id;
+        bankInput.value = tpl.bank;
+        catInput.value = tpl.category;
+        nameInput.value = tpl.title;
+        contentInput.value = tpl.content;
+      } else {
+        titleEl.textContent = 'Add New Script';
+        idInput.value = '';
+        bankInput.value = state.activeBank;
+        catInput.value = state.activeCategory !== 'All' ? state.activeCategory : 'First-Time Inquiries';
+        nameInput.value = '';
+        contentInput.value = '';
+      }
+
+      modal.classList.remove('hidden');
+      setTimeout(() => nameInput.focus(), 50);
+    }
+
+    function closeTemplateModal() {
+      document.getElementById('template-modal').classList.add('hidden');
+    }
+
+    function saveTemplateForm(evt) {
+      evt.preventDefault();
+      const id = document.getElementById('form-id').value;
+      const bank = document.getElementById('form-bank').value;
+      const category = document.getElementById('form-category').value;
+      const title = document.getElementById('form-title').value.replace(/[—–]/g, '-').trim();
+      const content = document.getElementById('form-content').value.replace(/[—–]/g, '-').trim();
+
+      if (!title || !content) return;
+
+      if (id) {
+        const idx = state.templates.findIndex(t => t.id === id);
+        if (idx !== -1) {
+          state.templates[idx] = { ...state.templates[idx], bank, category, title, content };
+        }
+        showToast('Script updated!', '✅');
+      } else {
+        const newTpl = {
+          id: `${bank}-${Date.now()}`,
+          bank,
+          category,
+          title,
+          content
+        };
+        state.templates.unshift(newTpl);
+        showToast('New script added!', '✨');
+      }
+
+      saveTemplates();
+      closeTemplateModal();
+
+      if (bank !== state.activeBank) {
+        switchBank(bank);
+      } else {
+        updateBankCounts();
+        renderCategoryPills();
+        renderTemplates();
+      }
+    }
+
+    function openDeleteConfirm(id) {
+      const tpl = state.templates.find(t => t.id === id);
+      if (!tpl) return;
+
+      document.getElementById('confirm-title').textContent = 'Delete Script?';
+      document.getElementById('confirm-message').textContent = `Are you sure you want to delete "${tpl.title}"? This cannot be undone.`;
+      pendingConfirmCallback = () => {
+        state.templates = state.templates.filter(t => t.id !== id);
+        saveTemplates();
+        updateBankCounts();
+        renderCategoryPills();
+        renderTemplates();
+        showToast('Script deleted', '🗑️');
+      };
+      document.getElementById('confirm-modal').classList.remove('hidden');
+    }
+
+    function openResetConfirm() {
+      document.getElementById('confirm-title').textContent = 'Reset to Default Scripts?';
+      document.getElementById('confirm-message').textContent = 'This will restore all 26 Banana Bank and 11 Apple Bank default clinic templates.';
+      pendingConfirmCallback = () => {
+        state.templates = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
+        saveTemplates();
+        updateBankCounts();
+        renderCategoryPills();
+        renderTemplates();
+        showToast('Restored all 37 default scripts!', '🔄');
+      };
+      document.getElementById('confirm-modal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      pendingConfirmCallback = null;
+    }
+
+    function executeConfirmAction() {
+      if (typeof pendingConfirmCallback === 'function') {
+        pendingConfirmCallback();
+      }
+      closeConfirmModal();
+    }
+
+    // =========================================================================
+    // 10. EXPORT & IMPORT JSON BACKUP
+    // =========================================================================
+    function exportTemplatesJSON() {
+      try {
+        const payload = {
+          app: 'Dental Clinic WhatsApp Template Manager',
+          version: 'v5',
+          exportedAt: new Date().toISOString(),
+          templates: state.templates
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `dental-whatsapp-templates-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Exported JSON backup!', '📦');
+      } catch (err) {
+        showToast('Export failed', '⚠️');
+      }
+    }
+
+    function importTemplatesJSON(evt) {
+      const file = evt.target.files && evt.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const list = Array.isArray(parsed) ? parsed : parsed.templates;
+          if (!Array.isArray(list) || list.length === 0) {
+            showToast('Invalid JSON format', '⚠️');
+            return;
+          }
+
+          const cleaned = list
+            .filter(item => item && (item.bank === 'banana' || item.bank === 'apple') && item.title && item.content)
+            .map(item => ({
+              id: item.id || `${item.bank}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+              bank: item.bank,
+              category: CATEGORIES.includes(item.category) ? item.category : 'First-Time Inquiries',
+              title: String(item.title).replace(/[—–]/g, '-').trim(),
+              content: String(item.content).replace(/[—–]/g, '-').trim()
+            }));
+
+          if (cleaned.length === 0) {
+            showToast('No valid templates found in file', '⚠️');
+            return;
+          }
+
+          state.templates = cleaned;
+          saveTemplates();
+          updateBankCounts();
+          renderCategoryPills();
+          renderTemplates();
+          showToast(`Imported ${cleaned.length} scripts!`, '🎉');
+        } catch (err) {
+          showToast('Could not parse JSON file', '⚠️');
+        } finally {
+          evt.target.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // =========================================================================
+    // 11. TOAST & ESCAPING UTILITIES
+    // =========================================================================
+    function showToast(message, icon = '✨') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      document.getElementById('toast-icon').textContent = icon;
+
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2400);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeJs(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    // =========================================================================
+    // 12. CANVAS PARTICLE ENGINE:
+    //     - BANANA BANK: Floating & Twinkling Golden/Yellow Glitter Specks
+    //     - APPLE BANK: Drifting & Gleaming 4-Point Pink Star Sparkles
+    //     - CLICK BURSTS: Confetti-like Glitter or Sparkles on Copy!
+    // =========================================================================
+    const ambientCanvas = document.getElementById('effects-canvas');
+    const ambientCtx = ambientCanvas.getContext('2d');
+    const burstCanvas = document.getElementById('burst-canvas');
+    const burstCtx = burstCanvas.getContext('2d');
+
+    let ambientParticles = [];
+    let burstParticles = [];
+    let animFrameId = null;
+
+    const BANANA_GLITTER_COLORS = ['#F59E0B', '#FACC15', '#FDE047', '#FEF08A', '#D97706', '#FFFFFF'];
+    const APPLE_SPARKLE_COLORS = ['#EC4899', '#F472B6', '#F9A8D4', '#DB2777', '#FB7185', '#FFFFFF'];
+
+    function resizeCanvases() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      [ambientCanvas, burstCanvas].forEach(c => {
+        c.width = w * dpr;
+        c.height = h * dpr;
+        c.style.width = w + 'px';
+        c.style.height = h + 'px';
+        c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+      });
+    }
+
+    function initAmbientParticles() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const count = Math.min(Math.max(Math.floor((w * h) / 17000), 34), 85);
+      const isBanana = state.activeBank === 'banana';
+      const palette = isBanana ? BANANA_GLITTER_COLORS : APPLE_SPARKLE_COLORS;
+
+      ambientParticles = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size: isBanana ? (Math.random() * 4.2 + 2.0) : (Math.random() * 8.5 + 4.5),
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: isBanana ? -(Math.random() * 0.45 + 0.12) : -(Math.random() * 0.38 + 0.1),
+        phase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.045 + 0.018,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.025,
+        color: palette[Math.floor(Math.random() * palette.length)],
+        shape: isBanana ? (Math.random() > 0.35 ? 'diamond' : 'circle') : 'star4'
+      }));
+    }
+
+    function triggerCopyBurst(cx, cy) {
+      const isBanana = state.activeBank === 'banana';
+      const palette = isBanana ? BANANA_GLITTER_COLORS : APPLE_SPARKLE_COLORS;
+      const count = 30;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.45;
+        const speed = Math.random() * 5.2 + 2.0;
+        burstParticles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.8,
+          gravity: 0.12,
+          size: isBanana ? (Math.random() * 5.5 + 2.8) : (Math.random() * 10 + 5),
+          alpha: 1,
+          decay: Math.random() * 0.022 + 0.016,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.18,
+          color: palette[Math.floor(Math.random() * palette.length)],
+          type: isBanana ? 'glitter' : 'sparkle'
+        });
+      }
+    }
+
+    function drawFourPointStar(ctx, x, y, outerR, rotation, color, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+
+      const innerR = outerR * 0.28;
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const r = i % 2 === 0 ? outerR : innerR;
+        const angle = (i * Math.PI) / 4;
+        const px = Math.cos(angle) * r;
+        const py = Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawGlitterSpeck(ctx, x, y, size, rotation, color, alpha, shape) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.shadowColor = '#FACC15';
+      ctx.shadowBlur = 7;
+
+      if (shape === 'diamond') {
+        ctx.beginPath();
+        ctx.moveTo(0, -size);
+        ctx.lineTo(size * 0.72, 0);
+        ctx.lineTo(0, size);
+        ctx.lineTo(-size * 0.72, 0);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function animateParticles() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      ambientCtx.clearRect(0, 0, w, h);
+      burstCtx.clearRect(0, 0, w, h);
+
+      if (state.effectsEnabled) {
+        // Draw Ambient Glitter / Sparkles
+        for (let i = 0; i < ambientParticles.length; i++) {
+          const p = ambientParticles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.phase += p.twinkleSpeed;
+          p.rotation += p.rotSpeed;
+
+          if (p.y < -15) { p.y = h + 15; p.x = Math.random() * w; }
+          if (p.x < -15) p.x = w + 15;
+          if (p.x > w + 15) p.x = -15;
+
+          const twinkleAlpha = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(p.phase));
+          if (p.shape === 'star4') {
+            const scalePulse = 0.75 + 0.35 * Math.sin(p.phase);
+            drawFourPointStar(ambientCtx, p.x, p.y, p.size * scalePulse, p.rotation, p.color, twinkleAlpha);
+          } else {
+            drawGlitterSpeck(ambientCtx, p.x, p.y, p.size, p.rotation, p.color, twinkleAlpha, p.shape);
+          }
+        }
+
+        // Draw Copy Click Burst Particles
+        for (let i = burstParticles.length - 1; i >= 0; i--) {
+          const b = burstParticles[i];
+          b.x += b.vx;
+          b.y += b.vy;
+          b.vy += b.gravity;
+          b.rotation += b.rotSpeed;
+          b.alpha -= b.decay;
+
+          if (b.alpha <= 0) {
+            burstParticles.splice(i, 1);
+            continue;
+          }
+
+          if (b.type === 'sparkle') {
+            drawFourPointStar(burstCtx, b.x, b.y, b.size, b.rotation, b.color, b.alpha);
+          } else {
+            drawGlitterSpeck(burstCtx, b.x, b.y, b.size, b.rotation, b.color, b.alpha, 'diamond');
+          }
+        }
+      }
+
+      animFrameId = requestAnimationFrame(animateParticles);
+    }
+
+    function toggleEffects() {
+      state.effectsEnabled = !state.effectsEnabled;
+      document.getElementById('effects-label').textContent = state.effectsEnabled ? '✨ Effects: ON' : '✨ Effects: OFF';
+      ambientCanvas.style.opacity = state.effectsEnabled ? '1' : '0';
+      if (!state.effectsEnabled) {
+        burstParticles = [];
+      }
+      showToast(state.effectsEnabled ? 'Glitter & Sparkles ON!' : 'Effects paused for a calm view', '✨');
+    }
+
+    // =========================================================================
+    // 13. INITIALIZATION
+    // =========================================================================
+    window.addEventListener('resize', () => {
+      resizeCanvases();
+      initAmbientParticles();
+    });
+
+    // Close modals when pressing Escape
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeTemplateModal();
+        closeConfirmModal();
+      }
+    });
+
+    window.onload = function () {
+      loadTemplates();
+      resizeCanvases();
+      switchBank('banana');
+      animateParticles();
+    };
+  </script>
+</body>
+</html>
